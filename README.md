@@ -3,8 +3,8 @@
 > A progressive collection of real DevOps scripts, configs, and infrastructure code —
 > built from the ground up following the natural learning path of a DevOps engineer.
 
-![GitHub last commit](https://img.shields.io/github/last-commit/YOUR_USERNAME/devops-automation-toolkit)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/YOUR_USERNAME/devops-automation-toolkit)
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/aniruddhajadhav7/devops-automation-toolkit)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Phase](https://img.shields.io/badge/current%20phase-Linux%20Fundamentals-orange)
 
@@ -17,15 +17,15 @@ This repo follows a deliberate, sequential learning path. Each phase builds on t
 | Phase | Topic | Status |
 |-------|-------|--------|
 | 🐧 1 | Linux Fundamentals | 🔄 In Progress |
-| 🐚 2 | Bash Scripting | ⏳ Upcoming |
-| 🐳 3 | Docker & Containers | ⏳ Upcoming |
-| ⚙️ 4 | CI/CD — GitHub Actions | ⏳ Upcoming |
-| 🏗️ 5 | Infrastructure as Code (Terraform) | ⏳ Upcoming |
-| ☁️ 6 | Cloud Automation (AWS & GCP) | ⏳ Upcoming |
-| ☸️ 7 | Kubernetes | ⏳ Upcoming |
-| 🎡 8 | Helm & GitOps (ArgoCD) | ⏳ Upcoming |
-| 📊 9 | Monitoring & Alerting | ⏳ Upcoming |
-| 🔐 10 | Security & Secrets Management | ⏳ Upcoming |
+| 🐚 2 | Bash Scripting | |
+| 🐳 3 | Docker & Containers | ⏳  |
+| ⚙️ 4 | CI/CD — GitHub Actions |  |
+| 🏗️ 5 | Infrastructure as Code (Terraform) |  |
+| ☁️ 6 | Cloud Automation (AWS & GCP) |  |
+| ☸️ 7 | Kubernetes | |
+| 🎡 8 | Helm & GitOps (ArgoCD) |  |
+| 📊 9 | Monitoring & Alerting | |
+| 🔐 10 | Security & Secrets Management | |
 
 ---
 
@@ -88,7 +88,7 @@ chmod +x linux/system-info.sh
 
 ## 📌 About This Project
 
-This toolkit is built over ~3 months with commits every 2 days — following
+This toolkit is built over my learning journey but repo cretaed in march 2026 till then it was local.
 the natural DevOps learning sequence. It's designed to be:
 
 - **Practical** — every script solves a real problem
@@ -99,4 +99,4 @@ the natural DevOps learning sequence. It's designed to be:
 
 ## 📄 License
 
-MIT © YOUR_NAME
+MIT © Aniruddha Jadhav
