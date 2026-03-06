@@ -18,7 +18,7 @@ This repo follows a deliberate, sequential learning path. Each phase builds on t
 |-------|-------|--------|
 | 🐧 1 | Linux Fundamentals | 🔄 In Progress |
 | 🐚 2 | Bash Scripting | |
-| 🐳 3 | Docker & Containers | ⏳  |
+| 🐳 3 | Docker & Containers |   |
 | ⚙️ 4 | CI/CD — GitHub Actions |  |
 | 🏗️ 5 | Infrastructure as Code (Terraform) |  |
 | ☁️ 6 | Cloud Automation (AWS & GCP) |  |
@@ -69,7 +69,7 @@ Each folder contains a dedicated `README.md` with usage examples.
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/devops-automation-toolkit.git
+git clone https://github.com/aniruddhajadhav7/devops-automation-toolkit.git
 cd devops-automation-toolkit
 
 # Example: run the system info script
