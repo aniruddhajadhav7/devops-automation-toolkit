@@ -4,7 +4,6 @@
 > built from the ground up following the natural learning path of a DevOps engineer.
 
 
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/aniruddhajadhav7/devops-automation-toolkit)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Phase](https://img.shields.io/badge/current%20phase-Linux%20Fundamentals-orange)
 
