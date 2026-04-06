@@ -4,7 +4,7 @@
 # backup-local.sh
 # Description: Local backup script with tar+gz compression, timestamp, and
 #              retention policy for automated backups
-# Author: DevOps Automation Toolkit
+# Author: Aniruddha Jadhav
 # Usage: ./backup-local.sh [SOURCE_DIR] [BACKUP_DIR] [RETENTION_DAYS]
 ################################################################################
 

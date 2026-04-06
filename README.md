@@ -15,8 +15,8 @@ This repo follows a deliberate, sequential learning path. Each phase builds on t
 
 | Phase | Topic | Status |
 |-------|-------|--------|
-| 🐧 1 | Linux Fundamentals | 🔄 In Progress |
-| 🐚 2 | Bash Scripting | |
+| 🐧 1 | Linux Fundamentals | ✅|
+| 🐚 2 | Bash Scripting | ✅|
 | 🐳 3 | Docker & Containers |   |
 | ⚙️ 4 | CI/CD — GitHub Actions |  |
 | 🏗️ 5 | Infrastructure as Code (Terraform) |  |

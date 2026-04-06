@@ -3,7 +3,7 @@
 ################################################################################
 # menu-driven-tool.sh
 # Description: Interactive CLI menu for common system administration tasks
-# Author: DevOps Automation Toolkit
+# Author: Aniruddha Jadhav
 # Usage: ./menu-driven-tool.sh
 ################################################################################
 

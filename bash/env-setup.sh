@@ -4,7 +4,7 @@
 # env-setup.sh
 # Description: Bootstrap a fresh Linux machine with essential packages and
 #              configurations for DevOps automation
-# Author: DevOps Automation Toolkit
+# Author: Aniruddha Jadhav
 # Usage: sudo ./env-setup.sh
 ################################################################################
 

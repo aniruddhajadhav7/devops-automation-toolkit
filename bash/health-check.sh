@@ -3,7 +3,7 @@
 ################################################################################
 # health-check.sh
 # Description: Service health check script with ping, HTTP checks, and alerts
-# Author: DevOps Automation Toolkit
+# Author: Aniruddha Jadhav
 # Usage: ./health-check.sh
 ################################################################################
 
