@@ -1,0 +1,243 @@
+version: '3.9'
+
+# Production-hardened Docker Compose configuration
+# Includes security best practices, environment variable management, secrets, healthchecks, logging
+services:
+  # Main Application Service
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+        VCS_REF: ${VCS_REF:-unknown}
+        VERSION: ${VERSION:-1.0.0}
+    image: ${REGISTRY:-docker.io}/${APP_NAME}:${APP_VERSION:-latest}
+    container_name: ${COMPOSE_PROJECT_NAME}-app
+    restart: always
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@cache:6379/0
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    secrets:
+      - db_password
+      - redis_password
+      - secret_key
+      - ssl_cert
+      - ssl_key
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    networks:
+      - devops-network
+    volumes:
+      - app-logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-s", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=app"
+    deploy:
+      replicas: ${APP_REPLICAS:-1}
+      resources:
+        limits:
+          cpus: '${APP_CPU_LIMIT:-1}'
+          memory: ${APP_MEMORY_LIMIT:-512M}
+        reservations:
+          cpus: '${APP_CPU_RESERVE:-0.5}'
+          memory: ${APP_MEMORY_RESERVE:-256M}
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+  # PostgreSQL Database Service
+  db:
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    container_name: ${COMPOSE_PROJECT_NAME}-db
+    restart: always
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=${DB_LOCALE:-en_US.UTF-8}"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    secrets:
+      - db_password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+      - /etc/timezone:/etc/timezone:ro
+    networks:
+      - devops-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=database"
+    deploy:
+      resources:
+        limits:
+          cpus: '${DB_CPU_LIMIT:-2}'
+          memory: ${DB_MEMORY_LIMIT:-1G}
+        reservations:
+          cpus: '${DB_CPU_RESERVE:-1}'
+          memory: ${DB_MEMORY_RESERVE:-512M}
+
+  # Redis Cache Service
+  cache:
+    image: redis:${REDIS_VERSION:-7}-alpine
+    container_name: ${COMPOSE_PROJECT_NAME}-cache
+    restart: always
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory ${REDIS_MAX_MEMORY:-256mb}
+      --maxmemory-policy allkeys-lru
+      --bind 0.0.0.0
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - cache-data:/data
+      - /etc/timezone:/etc/timezone:ro
+    networks:
+      - devops-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+        labels: "service=cache"
+    deploy:
+      resources:
+        limits:
+          cpus: '${REDIS_CPU_LIMIT:-1}'
+          memory: ${REDIS_MEMORY_LIMIT:-512M}
+        reservations:
+          cpus: '${REDIS_CPU_RESERVE:-0.5}'
+          memory: ${REDIS_MEMORY_RESERVE:-256M}
+
+  # Nginx Reverse Proxy with SSL/TLS
+  proxy:
+    image: nginx:${NGINX_VERSION:-latest}-alpine
+    container_name: ${COMPOSE_PROJECT_NAME}-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx-ssl.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/certs:/etc/nginx/certs:ro
+      - proxy-cache:/var/cache/nginx
+      - /etc/timezone:/etc/timezone:ro
+    secrets:
+      - ssl_cert
+      - ssl_key
+    depends_on:
+      - app
+    networks:
+      - devops-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+        labels: "service=proxy"
+    deploy:
+      resources:
+        limits:
+          cpus: '${PROXY_CPU_LIMIT:-1}'
+          memory: ${PROXY_MEMORY_LIMIT:-256M}
+        reservations:
+          cpus: '${PROXY_CPU_RESERVE:-0.5}'
+          memory: ${PROXY_MEMORY_RESERVE:-128M}
+
+  # Optional: Centralized Logging with Loki
+  loki:
+    image: grafana/loki:${LOKI_VERSION:-latest}
+    container_name: ${COMPOSE_PROJECT_NAME}-loki
+    restart: always
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./docker/loki-config.yml:/etc/loki/local-config.yml:ro
+      - loki-data:/loki
+    networks:
+      - devops-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          cpus: '${LOKI_CPU_LIMIT:-1}'
+          memory: ${LOKI_MEMORY_LIMIT:-512M}
+
+networks:
+  devops-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
+
+volumes:
+  db-data:
+    driver: local
+  cache-data:
+    driver: local
+  app-logs:
+    driver: local
+  proxy-cache:
+    driver: local
+  loki-data:
+    driver: local
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  redis_password:
+    file: ./secrets/redis_password.txt
+  secret_key:
+    file: ./secrets/secret_key.txt
+  ssl_cert:
+    file: ./secrets/ssl_cert.pem
+  ssl_key:
+    file: ./secrets/ssl_key.pem
