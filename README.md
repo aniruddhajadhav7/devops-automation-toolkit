@@ -4,9 +4,6 @@
 > built from the ground up following the natural learning path of a DevOps engineer.
 
 
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Phase](https://img.shields.io/badge/current%20phase-Linux%20Fundamentals-orange)
-
 ---
 
 ## 🗺️ Learning Path
@@ -17,7 +14,7 @@ This repo follows a deliberate, sequential learning path. Each phase builds on t
 |-------|-------|--------|
 | 🐧 1 | Linux Fundamentals | ✅|
 | 🐚 2 | Bash Scripting | ✅|
-| 🐳 3 | Docker & Containers |   |
+| 🐳 3 | Docker & Containers |  ✅ |
 | ⚙️ 4 | CI/CD — GitHub Actions |  |
 | 🏗️ 5 | Infrastructure as Code (Terraform) |  |
 | ☁️ 6 | Cloud Automation (AWS & GCP) |  |
@@ -47,21 +44,6 @@ devops-automation-toolkit/
 
 ---
 
-## 🐧 Phase 1: Linux Fundamentals
-
-Scripts for essential Linux system administration tasks.
-
-| Script | Description |
-|--------|-------------|
-| `linux/system-info.sh` | One-shot report: CPU, RAM, disk usage, uptime |
-| `linux/user-management.sh` | Create/delete users, assign groups, set permissions |
-| `linux/log-analyzer.sh` | Parse system logs, extract errors, generate summary |
-| `linux/disk-cleanup.sh` | Find and remove large files, rotate old logs |
-| `linux/process-monitor.sh` | Monitor top processes, kill by name or PID |
-| `linux/cron/` | Example cron jobs: backups, health pings, log rotation |
-
----
-
 ## 🚀 Quick Start
 
 Each folder contains a dedicated `README.md` with usage examples.
@@ -87,8 +69,7 @@ chmod +x linux/system-info.sh
 
 ## 📌 About This Project
 
-This toolkit is built over my learning journey but repo cretaed in march 2026 till then it was local.
-the natural DevOps learning sequence. It's designed to be:
+This toolkit is consist of sample (Scripts,codes) with best practices.
 
 - **Practical** — every script solves a real problem
 - **Progressive** — complexity increases with each phase
